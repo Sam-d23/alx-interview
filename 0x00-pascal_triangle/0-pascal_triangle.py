@@ -1,11 +1,15 @@
 #!/usr/bin/python3
-'''
+"""
 This a python function that generates
 a Pascal's triangle.
-'''
+"""
 
 
 def pascal_triangle(n):
+    """
+    Function creating lists of integers
+    to form the Pascal's table.
+    """
     if n <= 0:
         return []
 
