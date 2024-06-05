@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+
 def canUnlockAll(boxes):
     """
     Determines if all boxes can be opened.
@@ -9,7 +10,6 @@ def canUnlockAll(boxes):
     Returns:
     bool: True if all boxes can be opened, False otherwise.
     """
-    
     # Number of boxes
     n = len(boxes)
     
@@ -38,3 +38,4 @@ def canUnlockAll(boxes):
     # Check if the number of visited boxes is equal to the total number of boxes
     # If true, all boxes can be unlocked
     return len(visited) == n
+
