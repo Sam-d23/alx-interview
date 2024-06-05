@@ -3,7 +3,7 @@
 def canUnlockAll(boxes):
     """
     Determines if all boxes can be opened.
-
+    
     Parameters:
     boxes (list of lists): A list where each element is a list of keys contained in the corresponding box.
 
@@ -11,17 +11,15 @@ def canUnlockAll(boxes):
     bool: True if all boxes can be opened, False otherwise.
     """
     n = len(boxes)  # Number of boxes
-    visited = set()  # Set to keep track of visited (unlocked) boxes
-    stack = [0]  # Stack to manage the boxes to be processed, starting with the first box (index 0)
+    seen_boxes = set([0])  # Set to keep track of visited (unlocked) boxes
+    unseen_boxes = set(boxes[0]).difference(set([0]))  # Set of keys to be processed
 
-    # While there are boxes to be processed
-    while stack:
-        current_box = stack.pop()  # Take the last box from the stack
-        if current_box not in visited:
-            visited.add(current_box)  # Mark it as visited
-            for key in boxes[current_box]:  # For each key in the current box
-                if key < n:  # If the key corresponds to a valid box index, add it to the stack
-                    stack.append(key)
+    while unseen_boxes:
+        boxIdx = unseen_boxes.pop()
+        if boxIdx < 0 or boxIdx >= n:  # Ignore invalid box indices
+            continue
+        if boxIdx not in seen_boxes:
+            unseen_boxes = unseen_boxes.union(boxes[boxIdx])  # Add new keys to be processed
+            seen_boxes.add(boxIdx)  # Mark this box as seen
 
-    # Check if the number of visited boxes is equal to the total number of boxes
-    return len(visited) == n
+    return len(seen_boxes) == n  # Return True if all boxes have been seen
