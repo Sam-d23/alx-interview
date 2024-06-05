@@ -1,26 +1,35 @@
 #!/usr/bin/python3
+"""Solves the lock boxes puzzle."""
+
 
 def canUnlockAll(boxes):
     """
-    Determines if all boxes can be opened.
-    
-    Parameters:
-    boxes (list of lists): A list where each element is a
-    list of keys contained in the corresponding box.
+    Check if all boxes can be opened.
+
+    Args:
+        boxes (list): List which contain all the boxes with the keys.
 
     Returns:
-    bool: True if all boxes can be opened, False otherwise.
+        bool: True if all boxes can be opened, otherwise, False.
     """
     n = len(boxes)
-    seen_boxes = set([0])
-    unseen_boxes = set(boxes[0]).difference(set([0]))
+    seen = set()
+    stack = [0]
 
-    while unseen_boxes:
-        box_idx = unseen_boxes.pop()
-        if box_idx < 0 or box_idx >= n:
-            continue
-        if box_idx not in seen_boxes:
-            unseen_boxes = unseen_boxes.union(boxes[box_idx])
-            seen_boxes.add(box_idx)
+    while stack:
+        current_box = stack.pop()
+        if current_box not in seen:
+            seen.add(current_box)
+            stack.extend(boxes[current_box])
 
-    return len(seen_boxes) == n
+    return len(seen) == n
+
+
+def main():
+    """Entry point."""
+    canUnlockAll([[]])
+
+
+if __name__ == '__main__':
+    main()
+
