@@ -1,28 +1,21 @@
 #!/usr/bin/python3
-'''Checks whether all the boxes can be opened
+'''A module traversing lockboxes.
 '''
 
 
 def canUnlockAll(boxes):
-    '''
-    Prototype: def canUnlockAll(boxes)\
-    boxes is a list of lists
-    A key labelled the same number as a box\
-            opens that box\
-    all keys are taken to be positive integers\
-        There can be keys that do not have boxes\
-    The first box boxes[0] is unlocked\
-    Return True if all boxes can be opened, else return False\
-
+    '''Checks whether all the boxes in a list of boxes containing keys
+    (indices) to other boxes can be unlocked given that the first
+    box is unlocked.
     '''
     n = len(boxes)
-    checked_boxes = set([0])
-    unchecked_boxes = set(boxes[0]).difference(set([0]))
-    while len(unchecked_boxes) > 0:
-        boxIdx = unchecked_boxes.pop()
+    seen_boxes = set([0])
+    unseen_boxes = set(boxes[0]).difference(set([0]))
+    while len(unseen_boxes) > 0:
+        boxIdx = unseen_boxes.pop()
         if not boxIdx or boxIdx >= n or boxIdx < 0:
             continue
         if boxIdx not in seen_boxes:
-            unchecked_boxes = unchecked_boxes.union(boxes[boxIdx])
-            checked_boxes.add(boxIdx)
-    return n == len(checked_boxes)
+            unseen_boxes = unseen_boxes.union(boxes[boxIdx])
+            seen_boxes.add(boxIdx)
+    return n == len(seen_boxes)
