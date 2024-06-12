@@ -2,6 +2,11 @@
 
 
 def minOperations(n):
+    """
+    This function returns the minimum number
+    of operations required to print duplications
+    of the letter 'H'.
+    """
     if n <= 1:
         return 0
 
