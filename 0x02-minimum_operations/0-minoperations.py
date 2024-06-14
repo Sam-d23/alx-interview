@@ -3,7 +3,8 @@
 Minimum operations function
 """
 
-def minOperations(n):
+
+def minOperations(n: int) -> int:
     """
     This function returns the minimum number
     of operations required to print duplications
