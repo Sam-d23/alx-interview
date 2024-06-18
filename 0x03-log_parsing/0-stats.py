@@ -1,4 +1,5 @@
-#!/usr/bin/env python3
+#!/usr/bin/python3
+
 """
 Log parsing project.
 """
@@ -9,6 +10,8 @@ import re
 import signal
 from collections import defaultdict
 
+
+# Dictionary to store counts of status codes
 status_code_counts = defaultdict(int)
 total_file_size = 0
 line_count = 0
@@ -35,14 +38,18 @@ try:
         if not match:
             continue
         
-        status_code, file_size = map(int, match.groups())
+        try:
+            status_code, file_size = map(int, match.groups())
+            if status_code in {200, 301, 400, 401, 403, 404, 405, 500}:
+                total_file_size += file_size
+                status_code_counts[status_code] += 1
+                line_count += 1
         
-        total_file_size += file_size
-        status_code_counts[status_code] += 1
-        line_count += 1
+                if line_count % 10 == 0:
+                    print_statistics(None, None)
         
-        if line_count % 10 == 0:
-            print_statistics(None, None)
+        except ValueError:
+            continue
 
 except KeyboardInterrupt:
     print_statistics(None, None)
