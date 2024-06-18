@@ -1,20 +1,17 @@
 #!/usr/bin/python3
 import random
 import sys
-from time import sleep
 import datetime
+from time import sleep
 
-# Generate and write 10000 log entries
 for _ in range(10000):
-    # Sleep for a random time interval
-    sleep(random.random())
-    
-    # Generate random components for the log entry
     ip_address = ".".join(str(random.randint(1, 255)) for _ in range(4))
-    date_time = datetime.datetime.now()
     status_code = random.choice([200, 301, 400, 401, 403, 404, 405, 500])
     file_size = random.randint(1, 1024)
+    current_time = datetime.datetime.now().strftime("%d/%b/%Y:%H:%M:%S %z")
     
-    # Construct and write the log entry
-    sys.stdout.write(f"{ip_address} - [{date_time}] \"GET /projects/260 HTTP/1.1\" {status_code} {file_size}\n")
+    log_entry = f"{ip_address} - [{current_time}] \"GET /projects/260 HTTP/1.1\" {status_code} {file_size}\n"
+    
+    sys.stdout.write(log_entry)
     sys.stdout.flush()
+    sleep(random.random())
