@@ -27,8 +27,7 @@ try:
                     print(f'{key}: {value}')
             counter = 0
     
-except KeyboardInterrupt:
-    # Handle keyboard interruption (Ctrl+C)
+except Exception as error:
     pass
 
 finally:
