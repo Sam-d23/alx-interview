@@ -1,27 +1,15 @@
 #!/usr/bin/python3
-"""
-Generates logs.
-"""
-
-
-import random
 import sys
-import datetime
+import random
 from time import sleep
+import datetime
 
-
-for _ in range(10000):
-    ip_address = ".".join(str(random.randint(1, 255)) for _ in range(4))
-    status_code = random.choice([200, 301, 400, 401, 403, 404, 405, 500])
-    file_size = random.randint(1, 1024)
-    current_time = datetime.datetime.now().strftime("%d/%b/%Y:%H:%M:%S %z")
-    
-    log_entry = (
-        f"{ip_address} - [{current_time}] "
-        f"\"GET /projects/260 HTTP/1.1\" "
-        f"{status_code} {file_size}\n"
-    )
-    
-    sys.stdout.write(log_entry)
-    sys.stdout.flush()
+for j in range(10000):
     sleep(random.random())
+    sys.stdout.write("{:d}.{:d}.{:d}.{:d} - [{}] \"GET /projects/260 HTTP/1.1\" {} {}\n".format(
+        random.randint(1, 255), random.randint(1, 255), random.randint(1, 255), random.randint(1, 255),
+        datetime.datetime.now(),
+        random.choice([200, 301, 400, 401, 403, 404, 405, 500]),
+        random.randint(1, 1024)
+    ))
+    sys.stdout.flush()

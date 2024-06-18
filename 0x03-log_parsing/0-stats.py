@@ -1,39 +1,43 @@
 #!/usr/bin/python3
-'''Reads stdin line by line and computes metrics'''
-
 
 import sys
+import signal
+import re
 
+total_file_size = 0
+status_code_counts = {"200": 0, "301": 0, "400": 0, "401": 0,
+                      "403": 0, "404": 0, "405": 0, "500": 0}
+line_count = 0
 
-cache = {'200': 0, '301': 0, '400': 0, '401': 0,
-         '403': 0, '404': 0, '405': 0, '500': 0}
-total_size = 0
-counter = 0
+log_pattern = re.compile(r'^\S+ - \[\S+ \S+\] "GET /projects/260 HTTP/1.1" (\d{3}) (\d+)$')
+
+def print_stats():
+    print(f"File size: {total_file_size}")
+    for code in sorted(status_code_counts):
+        if status_code_counts[code] > 0:
+            print(f"{code}: {status_code_counts[code]}")
+
+def handle_interrupt(sig, frame):
+    print_stats()
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, handle_interrupt)
 
 try:
     for line in sys.stdin:
-        line_list = line.split()
-        if len(line_list) > 4:
-            code = line_list[-2]
-            size = int(line_list[-1])
-            if code in cache:
-                cache[code] += 1
-            total_size += size
-            counter += 1
+        line = line.strip()
+        match = log_pattern.match(line)
+        if match:
+            status_code, file_size = match.groups()
+            total_file_size += int(file_size)
+            status_code_counts[status_code] += 1
+            line_count += 1
+            if line_count % 10 == 0:
+                print_stats()
 
-        if counter == 10:
-            print(f'File size: {total_size}')
-            for key, value in sorted(cache.items()):
-                if value != 0:
-                    print(f'{key}: {value}')
-            counter = 0
-    
 except KeyboardInterrupt:
-    pass
+    handle_interrupt(signal.SIGINT, None)
 
 finally:
-    print(f'File size: {total_size}')
-    for key, value in sorted(cache.items()):
-        if value != 0:
-            print(f'{key}: {value}')
+    print_stats()
 
