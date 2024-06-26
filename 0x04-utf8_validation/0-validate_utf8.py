@@ -2,37 +2,42 @@
 
 
 def validUTF8(data):
-    """
-    Determine if a given data set represents a valid UTF-8 encoding.
+    """Checks if a list of integers are valid UTF-8 encoding."""
+    skip = 0
+    n = len(data)
 
-    :param data: List of integers representing the data set
-    :return: True if data is a valid UTF-8 encoding, else False
-    """
-    num_bytes = 0
+    for i in range(n):
+        if skip > 0:
+            skip -= 1
+            continue
 
-    # Masks to check the first byte
-    masks = [0b10000000, 0b11000000, 0b11100000, 0b11110000, 0b11111000]
+        byte = data[i]
 
-    # Masks to check bytes that follow the first byte in multi-byte character
-    follow_byte_mask = 0b11000000
-    follow_byte_value = 0b10000000
+        if byte < 0 or byte > 0xFF:
+            return False
 
-    for byte in data:
-        byte = byte & 0xFF  # Only consider the last 8 bits
-
-        if num_bytes == 0:
-            for i in range(5):
-                if (byte & masks[i]) == masks[i - 1]:
-                    num_bytes = i
-                    break
-            if num_bytes == 0:
-                continue
-            if num_bytes == 1 or num_bytes > 4:
-                return False
+        if byte <= 0x7F:
+            skip = 0
+        elif byte & 0b11111000 == 0b11110000:
+            # 4-byte utf-8 character encoding
+            span = 4
+        elif byte & 0b11110000 == 0b11100000:
+            # 3-byte utf-8 character encoding
+            span = 3
+        elif byte & 0b11100000 == 0b11000000:
+            # 2-byte utf-8 character encoding
+            span = 2
         else:
-            if (byte & follow_byte_mask) != follow_byte_value:
+            return False
+
+        if n - i < span:
+            return False
+
+        for j in range(1, span):
+            if data[i + j] & 0b11000000 != 0b10000000:
                 return False
 
-        num_bytes -= 1
+        skip = span - 1
 
-    return num_bytes == 0
+
+    return True
