@@ -2,6 +2,7 @@
 """code for UTF-8 Validation.
 """
 
+
 def validUTF8(data):
     """Checks whether a list of integers are valid for UTF-8 encoding."""
     skip = 0
