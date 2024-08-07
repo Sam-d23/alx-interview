@@ -4,23 +4,19 @@ Prime Game Simulation
 """
 
 
-def sieve(max_n):
-    """Return a list indicating prime status for each number up to max_n"""
+def isWinner(x, nums):
+    if x < 1 or not nums:
+        return None
+
+    max_n = max(nums)
+
     is_prime = [True] * (max_n + 1)
     is_prime[0] = is_prime[1] = False
     for i in range(2, int(max_n ** 0.5) + 1):
         if is_prime[i]:
             for j in range(i * i, max_n + 1, i):
                 is_prime[j] = False
-    return is_prime
 
-
-def isWinner(x, nums):
-    if x < 1 or not nums:
-        return None
-
-    max_n = max(nums)
-    is_prime = sieve(max_n)
 
     maria_wins = 0
     ben_wins = 0
