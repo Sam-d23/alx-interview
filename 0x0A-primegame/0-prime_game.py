@@ -31,7 +31,8 @@ def isWinner(x, nums):
         x (int): Number of rounds.
         nums (List[int]): Upper limits of ranges for each round.
     Returns:
-        str: Name of the player who won the most rounds ('Maria' or 'Ben'), or None if a tie.
+        str: Name of the player who won the most rounds ('Maria' or 'Ben'),
+        or None if a tie.
     """
     if x <= 0 or not nums:
         return None
