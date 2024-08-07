@@ -15,26 +15,6 @@ def sieve(max_n):
     return is_prime
 
 
-def simulate_game(n, is_prime):
-    """Simulate the game and return the winner for a given n"""
-    available = [True] * (n + 1)
-    turn = 0  # Maria starts first (0 for Maria, 1 for Ben)
-
-    while True:
-        move_made = False
-        for num in range(2, n + 1):
-            if is_prime[num] and available[num]:
-                for multiple in range(num, n + 1, num):
-                    available[multiple] = False
-                move_made = True
-                break
-
-        if not move_made:
-            return 'Ben' if turn == 0 else 'Maria'
-
-        turn = 1 - turn
-
-
 def isWinner(x, nums):
     if x < 1 or not nums:
         return None
@@ -46,11 +26,30 @@ def isWinner(x, nums):
     ben_wins = 0
 
     for n in nums:
-        winner = simulate_game(n, is_prime)
-        if winner == 'Maria':
-            maria_wins += 1
-        else:
+        if n == 1:
             ben_wins += 1
+            continue
+
+        available = [True] * (n + 1)
+        turn = 0  # Maria starts first (0 for Maria, 1 for Ben)
+
+        while True:
+            move_made = False
+            for num in range(2, n + 1):
+                if is_prime[num] and available[num]:
+                    for multiple in range(num, n + 1, num):
+                        available[multiple] = False
+                    move_made = True
+                    break
+
+            if not move_made:
+                if turn == 0:
+                    ben_wins += 1
+                else:
+                    maria_wins += 1
+                break
+
+            turn = 1 - turn
 
     if maria_wins > ben_wins:
         return 'Maria'
