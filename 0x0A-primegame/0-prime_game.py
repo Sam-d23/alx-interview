@@ -1,70 +1,55 @@
 #!/usr/bin/python3
 """
-Prime Game Simulation
+Define isWinner function, a solution to the Prime Game problem
 """
 
 
+def sieve_of_eratosthenes(max_n):
+    """
+    Generate a list of prime numbers up to max_n using the
+    Sieve of Eratosthenes.
+    Args:
+        max_n (int): The upper boundary for prime generation.
+    Returns:
+        List[int]: A list of prime numbers up to max_n.
+    """
+    if max_n < 2:
+        return []
+    is_prime = [True] * (max_n + 1)
+    is_prime[0] = is_prime[1] = False
+    for p in range(2, int(max_n**0.5) + 1):
+        if is_prime[p]:
+            for multiple in range(p * p, max_n + 1, p):
+                is_prime[multiple] = False
+    return [num for num, prime in enumerate(is_prime) if prime]
+
+
 def isWinner(x, nums):
-    if x < 1 or not nums:
+    """
+    Determines the winner of the Prime Game based on multiple rounds.
+    Args:
+        x (int): Number of rounds.
+        nums (List[int]): Upper limits of ranges for each round.
+    Returns:
+        str: Name of the player who won the most rounds ('Maria' or 'Ben'), or None if a tie.
+    """
+    if x <= 0 or not nums:
         return None
 
     max_n = max(nums)
-    
-    # Sieve of Eratosthenes to find all prime numbers up to max_n
-    is_prime = [True] * (max_n + 1)
-    is_prime[0] = is_prime[1] = False
-    
-    for i in range(2, int(max_n ** 0.5) + 1):
-        if is_prime[i]:
-            for j in range(i * i, max_n + 1, i):
-                is_prime[j] = False
-                
-    # Store the results of each round
-    results = []
-    
-    for n in nums:
-        if n == 1:
-            # If n is 1, Maria can't make a move, Ben wins
-            results.append('Ben')
-            continue
+    prime_list = sieve_of_eratosthenes(max_n)
 
-        # Simulate the game
-        available = [True] * (n + 1)
-        turn = 0  # Maria starts first (0 for Maria, 1 for Ben)
-        
-        while True:
-            move_made = False
-            for num in range(2, n + 1):
-                if is_prime[num] and available[num]:
-                    # Remove the prime and its multiples
-                    for multiple in range(num, n + 1, num):
-                        available[multiple] = False
-                    move_made = True
-                    break
-            
-            if not move_made:
-                if turn == 0:
-                    results.append('Ben')
-                else:
-                    results.append('Maria')
-                break
-            
-            # Switch turn
-            turn = 1 - turn
-    
-    # Count wins
-    maria_wins = results.count('Maria')
-    ben_wins = results.count('Ben')
-    
+    maria_wins = ben_wins = 0
+
+    for n in nums:
+        prime_count = len([p for p in prime_list if p <= n])
+        if prime_count % 2 == 0:
+            ben_wins += 1
+        else:
+            maria_wins += 1
+
     if maria_wins > ben_wins:
         return 'Maria'
     elif ben_wins > maria_wins:
         return 'Ben'
-    else:
-        return None
-
-# Example Usage
-x = 3
-nums = [4, 5, 1]
-print(isWinner(x, nums))  # Output: Ben
-
+    return None
